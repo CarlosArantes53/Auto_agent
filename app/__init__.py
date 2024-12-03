@@ -8,9 +8,7 @@ def create_app():
     with app.app_context():
         # Registrar Blueprints
         from app.routes.webhook import webhook_bp
-        from app.routes.send_message import send_message_bp
 
         app.register_blueprint(webhook_bp)
-        app.register_blueprint(send_message_bp)
 
     return app
