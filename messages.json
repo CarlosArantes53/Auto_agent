@@ -68,5 +68,22 @@
         "timestamp": "1733230858",
         "type": "text",
         "text": "Sobre o que falamos mais cedo?"
+    },
+    {
+        "from": "556492480202",
+        "id": "wamid.HBgMNTU2NDkyNDgwMjAyFQIAEhggREFFQ0Y3MjhERjhFMjJFQ0QzRjE0QUVGOTU4ODA2OTUA",
+        "timestamp": "1733231297",
+        "type": "text",
+        "text": "Opa"
+    },
+    {
+        "from": "556492480202",
+        "id": "wamid.HBgMNTU2NDkyNDgwMjAyFQIAEhggNEQ2Rjk5NDY4QTM2NkVGQTZCRDE3QUMxNjAwNTQ3QjIA",
+        "timestamp": "1733231324",
+        "type": "image",
+        "image": {
+            "media_id": "2618254055050977",
+            "file_path": "media_files\\2618254055050977.jpeg"
+        }
     }
 ]

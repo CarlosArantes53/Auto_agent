@@ -4,6 +4,9 @@ from app.utils.json_manager import read_json, write_json
 import google.generativeai as genai
 from PIL import Image
 import os
+import threading
+from collections import defaultdict
+import time
 import requests
 
 webhook_bp = Blueprint('webhook', __name__)
@@ -11,6 +14,10 @@ webhook_bp = Blueprint('webhook', __name__)
 # Configuração do Google Gemini
 genai.configure(api_key=os.getenv("GOOGLE_API_KEY"))
 model_name = "gemini-1.5-flash"
+
+# Filas para mensagens pendentes
+user_message_queues = defaultdict(list)
+processing_locks = defaultdict(threading.Lock)
 
 @webhook_bp.route('/webhook', methods=['GET'])
 def verify_webhook():
@@ -25,48 +32,60 @@ def receive_webhook():
     data = request.json
     if 'messages' in data['entry'][0]['changes'][0]['value']:
         messages = data['entry'][0]['changes'][0]['value']['messages']
-        existing_data = read_json("messages.json")
-
         for message in messages:
-            message_type = message.get("type")
             sender_id = message.get("from")
-            formatted_message = {
-                "from": sender_id,
-                "id": message.get("id"),
-                "timestamp": message.get("timestamp"),
-                "type": message_type
-            }
-
-            # Gera uma resposta do Google Gemini com base no tipo de mensagem
-            if message_type == "text":
-                user_prompt = message.get("text", {}).get("body")
-                gemini_response = generate_response_from_gemini(user_prompt)
-                formatted_message["text"] = user_prompt
-            elif message_type in ["image"]:
-                media_id = message[message_type]["id"]
-                mime_type = message[message_type]["mime_type"]
-                file_path = download_media(media_id, mime_type)
-                if file_path:
-                    gemini_response = generate_image_description(file_path)
-                else:
-                    gemini_response = "Erro ao processar a imagem."
-                formatted_message[message_type] = {"media_id": media_id, "file_path": file_path}
-            else:
-                gemini_response = "Tipo de mensagem não suportado."
-
-            # Adiciona a mensagem processada ao arquivo JSON
-            existing_data.append(formatted_message)
-
-            # Envia a resposta gerada ao cliente
-            send_response_to_client(sender_id, gemini_response)
-
-        # Salva o JSON atualizado
-        write_json("messages.json", existing_data)
-
+            process_message(sender_id, message)
     return jsonify({"status": "success"}), 200
 
+def process_message(sender_id, message):
+    """Adiciona a mensagem à fila do usuário e inicia o temporizador."""
+    user_message_queues[sender_id].append(message)
+
+    # Inicia um temporizador para processar as mensagens após 3 segundos
+    lock = processing_locks[sender_id]
+    if not lock.locked():
+        lock.acquire()
+        threading.Timer(3, process_user_queue, args=(sender_id,)).start()
+from app import create_app  # Certifique-se de importar a função para criar o app
+
+def process_user_queue(sender_id):
+    """Processa todas as mensagens acumuladas na fila de um usuário."""
+    app = create_app()  # Cria o app para usar no contexto
+    with app.app_context():
+        try:
+            messages = user_message_queues.pop(sender_id, [])
+            lock = processing_locks[sender_id]
+
+            if not messages:
+                return
+
+            prompts = []
+            for message in messages:
+                message_type = message.get("type")
+                if message_type == "text":
+                    user_prompt = message.get("text", {}).get("body")
+                    prompts.append(user_prompt)
+                elif message_type == "image":
+                    media_id = message["image"]["id"]
+                    mime_type = message["image"]["mime_type"]
+                    file_path = download_media(media_id, mime_type)
+                    if file_path:
+                        prompts.append(f"Descreva esta imagem: {file_path}")
+                    else:
+                        prompts.append("Erro ao processar uma imagem enviada pelo cliente.")
+
+            formatted_prompt = f"Você é um atendente de pet-shop e-commerce e deve responder em tom formal as seguintes solicitações do usuário:\n\n{'\n'.join(prompts)}"
+            gemini_response = generate_response_from_gemini(formatted_prompt)
+
+            # Envia a resposta para o cliente
+            send_response_to_client(sender_id, gemini_response)
+
+        finally:
+            # Libera o lock para que novas mensagens possam ser processadas
+            processing_locks[sender_id].release()
+
 def generate_response_from_gemini(prompt):
-    """Gera resposta do Google Gemini para mensagens de texto."""
+    """Gera uma resposta do Google Gemini para o prompt acumulado."""
     try:
         model = genai.GenerativeModel(model_name)
         response = model.generate_content([prompt])
@@ -74,17 +93,6 @@ def generate_response_from_gemini(prompt):
     except Exception as e:
         current_app.logger.error(f"Erro na chamada da API do Gemini: {e}")
         return "Erro ao gerar resposta."
-
-def generate_image_description(image_path):
-    """Gera descrição do Google Gemini para mensagens de imagem."""
-    try:
-        model = genai.GenerativeModel(model_name)
-        with Image.open(image_path) as img:
-            response = model.generate_content(["O que você vê nessa imagem?", img])
-        return response.text
-    except Exception as e:
-        current_app.logger.error(f"Erro na chamada da API do Gemini: {e}")
-        return "Erro ao descrever a imagem."
 
 def send_response_to_client(recipient_id, message_text):
     """Envia uma mensagem de texto de resposta ao cliente."""
