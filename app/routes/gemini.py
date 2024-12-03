@@ -6,15 +6,19 @@ import os
 genai.configure(api_key=os.getenv("GOOGLE_API_KEY"))
 model_name = "gemini-1.5-flash"
 
-def generate_response_from_gemini(prompt):
-    """Gera uma resposta do Google Gemini para o prompt."""
+def generate_response_from_gemini(prompt, images=None):
+    """Gera uma resposta do Google Gemini para o prompt e imagens."""
     try:
         model = genai.GenerativeModel(model_name)
-        response = model.generate_content([prompt])
+        inputs = [prompt]
+        if images:
+            inputs.extend(images)
+        response = model.generate_content(inputs)
         return response.text
     except Exception as e:
         current_app.logger.error(f"Erro na chamada da API do Gemini: {e}")
         return "Erro ao gerar resposta."
+
 
 def send_response_to_client(recipient_id, message_text):
     """Envia uma mensagem de texto de resposta ao cliente."""
