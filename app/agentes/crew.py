@@ -124,12 +124,3 @@ crew = Crew(
     verbose=True,
     process=Process.sequential
 )
-
-inputs = {
-    "pergunta": "Qual é o horário de atendimento?",
-    "preferencia_produto": "Rações para cães",
-    "preferencia_servico": "Banho e tosa"
-}
-
-resultado = crew.kickoff(inputs=inputs)
-print(resultado)
