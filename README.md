@@ -59,19 +59,21 @@ Este projeto implementa um sistema de atendimento automatizado utilizando a API 
 7. **Expor o Webhook com ngrok: Inicie o ngrok para expor o webhook:**
    ngrok http 5000 --domain (seu dominio)
 
-Referências e link úteis:
--> Gerar "ACCESS_TOKEN" : https://developers.facebook.com/apps/
+→ Referências e link úteis:
 
--> Gerar e configurar todo ngrok : https://dashboard.ngrok.com/domains/
+• Gerar "ACCESS_TOKEN" : https://developers.facebook.com/apps/
 
--> Gerar gemini api : https://aistudio.google.com/app/u/1/apikey
+• Gerar e configurar todo ngrok : https://dashboard.ngrok.com/domains/
 
--> Repositórios e tutoriais utilizados como referências:
---> https://github.com/alexfazio/crewAI-quickstart/blob/main/crewai_sequential_YoutubeVideoSearchTool_quickstart.ipynb
+• Gerar gemini api : https://aistudio.google.com/app/u/1/apikey
 
---> https://www.youtube.com/watch?v=3YPeh-3AFmM&t=359s
+→ Repositórios e tutoriais utilizados como referências:
 
---> https://github.com/daveebbelaar/python-whatsapp-bot/tree/main
+• https://github.com/alexfazio/crewAI-quickstart/blob/main/crewai_sequential_YoutubeVideoSearchTool_quickstart.ipynb
+
+• https://www.youtube.com/watch?v=3YPeh-3AFmM&t=359s
+
+• https://github.com/daveebbelaar/python-whatsapp-bot/tree/main
 
 **Exemplos de app respondendo WhatsApp, vide que o mesmo sabe identificar quando não se trata de um animal, sabe identificar fotos e interpretar áudios**
 
