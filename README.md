@@ -10,6 +10,8 @@ Este projeto implementa um sistema de atendimento automatizado utilizando a API 
   - **Agente Central**: Fornece informações gerais sobre o PetShop, incluindo horários, equipe e promoções.
   - **Especialista em Produtos**: Recomenda produtos adequados com base nas preferências do usuário.
   - **Especialista em Serviços**: Sugere serviços baseados nas necessidades apresentadas pelo cliente.
+- **Agente para geração de prompt**:
+  - **Geração e organização do prompt**: Recebe as mensagens, áudios ou fotos do usuário, passa para o gemini sumarizar e retornar para o módulo **crew.py** o prompt gerado.
 - **Geração de Respostas**: As respostas aos usuários são geradas por um modelo de IA, integrado ao sistema via API, que utiliza prompts customizados com base nas interações recebidas.
 
 ## Estrutura do Fluxo
@@ -39,10 +41,11 @@ Este projeto implementa um sistema de atendimento automatizado utilizando a API 
    ```bash
    git clone https://github.com/CarlosArantes53/Auto_agent.git
    cd seu-repositorio
-2. **Instalar Dependências: Utilize um ambiente virtual para gerenciar as dependências:**
-  python -m venv venv
-  source  venv\Scripts\activate
-  pip install -r requirements.txt
+2. **Instalar Dependências: Utilize um ambiente virtual para gerenciar as dependências**:
+   ```bash
+   python -m venv venv
+   source  venv\Scripts\activate
+   pip install -r requirements.txt
 
 4. **Configurar Variáveis de Ambiente: Crie um arquivo .env e configure as variáveis necessárias:**
   ACCESS_TOKEN=your_whatsapp_api_access_token
@@ -61,6 +64,14 @@ Referências e link úteis:
 -> Gerar e configurar todo ngrok : https://dashboard.ngrok.com/domains/
 -> Gerar gemini api : https://aistudio.google.com/app/u/1/apikey
 -> Repositórios e tutoriais utilizados como referências:
+
 --> https://github.com/alexfazio/crewAI-quickstart/blob/main/crewai_sequential_YoutubeVideoSearchTool_quickstart.ipynb
+
 --> https://www.youtube.com/watch?v=3YPeh-3AFmM&t=359s
+
 --> https://github.com/daveebbelaar/python-whatsapp-bot/tree/main
+
+**Exemplos de app respondendo WhatsApp, vide que o mesmo sabe identificar quando não se trata de um animal, sabe identificar fotos e interpretar áudios**
+![Captura de tela 2024-12-12 093538](https://github.com/user-attachments/assets/427ef73f-6392-43fe-b53c-90ea983401ad)
+![Captura de tela 2024-12-12 093529](https://github.com/user-attachments/assets/cb8fd590-d3b9-4d83-b47b-264de01986c5)
+![Captura de tela 2024-12-12 093520](https://github.com/user-attachments/assets/637c8b00-b0c0-4f66-b350-3a432be18b8e)
