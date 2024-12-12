@@ -61,10 +61,12 @@ Este projeto implementa um sistema de atendimento automatizado utilizando a API 
 
 Referências e link úteis:
 -> Gerar "ACCESS_TOKEN" : https://developers.facebook.com/apps/
--> Gerar e configurar todo ngrok : https://dashboard.ngrok.com/domains/
--> Gerar gemini api : https://aistudio.google.com/app/u/1/apikey
--> Repositórios e tutoriais utilizados como referências:
 
+-> Gerar e configurar todo ngrok : https://dashboard.ngrok.com/domains/
+
+-> Gerar gemini api : https://aistudio.google.com/app/u/1/apikey
+
+-> Repositórios e tutoriais utilizados como referências:
 --> https://github.com/alexfazio/crewAI-quickstart/blob/main/crewai_sequential_YoutubeVideoSearchTool_quickstart.ipynb
 
 --> https://www.youtube.com/watch?v=3YPeh-3AFmM&t=359s
@@ -72,6 +74,12 @@ Referências e link úteis:
 --> https://github.com/daveebbelaar/python-whatsapp-bot/tree/main
 
 **Exemplos de app respondendo WhatsApp, vide que o mesmo sabe identificar quando não se trata de um animal, sabe identificar fotos e interpretar áudios**
+
+
 ![Captura de tela 2024-12-12 093538](https://github.com/user-attachments/assets/427ef73f-6392-43fe-b53c-90ea983401ad)
+
+
 ![Captura de tela 2024-12-12 093529](https://github.com/user-attachments/assets/cb8fd590-d3b9-4d83-b47b-264de01986c5)
+
+
 ![Captura de tela 2024-12-12 093520](https://github.com/user-attachments/assets/637c8b00-b0c0-4f66-b350-3a432be18b8e)
